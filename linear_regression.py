@@ -13,8 +13,9 @@ class LinearRegression(object):
 	def __init__(self, file_path):
 		self.data = {
 			"x1":[], "x2":[], "y":[], "hx":[]}
+		# self.theta = [0.2,165.3831294566555]
 		self.theta = [0,1]
-		self.alpha = 0.0001
+		self.alpha = 0.0000001
 		self.m = None
 		self.cost = {"theta0":[], "theta1":[], "cost": []}
 
@@ -57,14 +58,11 @@ class LinearRegression(object):
 			hx = self.get_hypothesis(index)
 			self.data["hx"].append(hx)
 			cost += (hx - self.data["y"][index]) ** 2
-			print("hx", hx,"y", self.data["y"][index])
 
 		cost /= 2.0 * self.m
 		self.cost["theta0"].append(self.theta[0])
 		self.cost["theta1"].append(self.theta[1])
 		self.cost["cost"].append(cost)
-		# values = [122, "Number of Bedrooms (X2)", "Price (Y)", self.data["x2"], self.data["y"]]
-		# self.plotGraph(values)
 
 	def calculate_descent(self):
 		sum_of_difference = 0
@@ -73,20 +71,19 @@ class LinearRegression(object):
 			difference = self.data["hx"][index] - self.data["y"][index]
 			sum_of_difference += difference
 			difference_times_x += difference * self.data["x1"][index]
-		print ("sum_of_difference, difference_times_x", sum_of_difference, difference_times_x)
+		
 		descent0 = sum_of_difference * self.alpha / self.m
 		descent1 = difference_times_x * self.alpha / self.m
-		print("[descent0, descent1] ",[descent0, descent1])
 		return [descent0, descent1]
 		
 	def gradient_descent(self):
 		self.set_cost()
 		descent = []
 		descent = self.calculate_descent()
-		limit = 0.00001
+		limit = self.alpha/10000
 		counter = 0
 		while abs(descent[0]) > limit or  abs(descent[1]) > limit:
-			if counter > 1:
+			if counter > 100:
 				break
 			else:
 				counter += 1
@@ -95,13 +92,14 @@ class LinearRegression(object):
 			self.theta[1] -= descent[1]
 			self.set_cost()
 			descent = self.calculate_descent()
-			print("data",self.data)
-			print("self.theta[0]",self.theta[0], "self.theta[1]", self.theta[1])
-			print("self.cost", self.cost)
 
 
-		values = [122, "Theta Value", "Cost (J)", self.cost["theta1"], self.cost["cost"]]
+		print("theta0: ",self.theta[0], "\ntheta1: ", self.theta[1])
+		print("\nInitial Cost: ", self.cost["cost"][0],"\nFinal Cost: ", self.cost["cost"][-1])
+		values = [122, "Theta 1 Value", "Cost (J)", self.cost["theta1"], self.cost["cost"]]
 		self.plot_graph(values)
+		plt.subplot(121)
+		plt.plot(self.data["x1"], self.data["hx"], "b")
 		plt.show()
 
 if __name__ == "__main__":
