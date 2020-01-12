@@ -1,7 +1,7 @@
 Linear Regression
 
 Goal:
-	The goal of this project is to simulate and the gradiend descent algorithm to optimise linear regression problem.
+	The goal of this project is to simulate and the gradient descent algorithm to optimise linear regression problem.
 
 How to make it work.
 
